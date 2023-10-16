@@ -1,0 +1,13 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 40px);
+    margin: 0;
+    padding: 10px;
+    gap: 10px;
+}
+
+.reveal-view {
+    flex: 1;
+    outline: solid 1px #ccc;
+}
