@@ -16,7 +16,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
-    <script src="https://dl.revealbi.io/reveal/libs/1.6.0/infragistics.reveal.js"></script>
+    <script src="https://dl.revealbi.io/reveal/libs/1.6.2/infragistics.reveal.js"></script>
 
     <script type="text/javascript">
 
@@ -41,7 +41,7 @@
         // which is using WebSocket for real time refreshing of dashboard data.
 
         // When this client received "updated-demo-data" message from WebSocket, this client will refresh dashboard data.
-        const wsUrl = (location.protocol === "https:" ? "wss" : "ws") + "://"+ location.host;
+        const wsUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host;
         const socket = new WebSocket(wsUrl);
         socket.addEventListener("message", e => {
             if (e.data === "updated-demo-data") {
