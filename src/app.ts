@@ -1,4 +1,5 @@
 import express from 'express';
+import expressStaticGzip from 'express-static-gzip';
 import reveal, { RevealOptions } from 'reveal-sdk-node';
 import http from "http";
 import cors from "cors";
@@ -31,7 +32,10 @@ wss.on('connection', (ws) => {
 app.use(cors()); // NOTE: Please be careful about CORS settings in production.
 
 // Expose static contents for the Reveal Web client.
-app.use(express.static('public'));
+app.use('/', expressStaticGzip('public', {
+  enableBrotli: true,
+  orderPreference: ['br']
+}));
 
 // A REST API implementation for the purpose of demonstration.
 
