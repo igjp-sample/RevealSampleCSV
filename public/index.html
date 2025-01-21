@@ -16,38 +16,53 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
-    <script src="./infragistics.reveal.js"></script>
+    <script src="https://dl.revealbi.io/reveal/libs/1.7.2/infragistics.reveal.js"></script>
 
     <script type="text/javascript">
+
+        $.ig.RevealSdkSettings.setBaseUrl("http://localhost:5112/");
 
         // Below lines are usual implementation of Reveal Web client.
         const revealView1 = new $.ig.RevealView("#reveal-view-1");
 
         revealView1.onDataSourcesRequested = (callback) => {
-            const restDataSource = new $.ig.RVRESTDataSource();
-            restDataSource.title = "Demo Data";
-            restDataSource.url = "http://localhost:5112/api/data";
-            restDataSource.useAnonymousAuthentication = true;
-            callback(new $.ig.RevealDataSources([restDataSource], [], true));
+            var localFileItem = new $.ig.RVLocalFileDataSourceItem();
+            localFileItem.id = "LocalFileDataSource"
+            localFileItem.uri = "local:/dummy_data.csv";
+
+            var csvDSI = new $.ig.RVCsvDataSourceItem(localFileItem);
+            csvDSI.title = "CSV Data";
+
+            callback(new $.ig.RevealDataSources([], [csvDSI], true));
         };
 
         $.ig.RVDashboard.loadDashboard("Default Dashboard", (dashboard) => {
             revealView1.dashboard = dashboard;
             console.log("Dashboard loaded", revealView1);
+
+            revealView1.onSave = (rv, args) => {
+                if (args.saveAs) {
+                    var newName = prompt("Please enter the dashboard name");
+                    isDuplicateName(newName).then(isDuplicate => {
+                        if (isDuplicate === "true") {
+                            if (!window.confirm("A dashboard with name: " + newName + " already exists. Do you want to override it?")) {
+                                return;
+                            }
+                        }
+                        args.dashboardId = args.name = newName;
+                        args.saveFinished();
+                    });
+                }
+                else {
+                    args.saveFinished();
+                }
+            };
         });
 
+        function isDuplicateName(name) {
+            return fetch(`http://localhost:5112/isduplicatename/${name}`).then(resp => resp.text());
+        }
 
-        // Below lines are particular part of this demo, 
-        // which is using WebSocket for real time refreshing of dashboard data.
-
-        // When this client received "updated-demo-data" message from WebSocket, this client will refresh dashboard data.
-        const wsUrl = (location.protocol === "https:" ? "wss" : "ws") + "://" + location.host;
-        const socket = new WebSocket(wsUrl);
-        socket.addEventListener("message", e => {
-            if (e.data === "updated-demo-data") {
-                revealView1.refreshDashboardData();
-            }
-        });
     </script>
 </body>
 
