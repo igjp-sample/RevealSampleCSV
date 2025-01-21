@@ -28,7 +28,7 @@
         revealView1.onDataSourcesRequested = (callback) => {
             var localFileItem = new $.ig.RVLocalFileDataSourceItem();
             localFileItem.id = "LocalFileDataSource"
-            localFileItem.uri = "local:/dummy_data.csv";
+            localFileItem.uri = "local:/test.csv";
 
             var csvDSI = new $.ig.RVCsvDataSourceItem(localFileItem);
             csvDSI.title = "CSV Data";
