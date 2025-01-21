@@ -20,8 +20,6 @@
 
     <script type="text/javascript">
 
-        $.ig.RevealSdkSettings.setBaseUrl("http://localhost:5112/");
-
         // Below lines are usual implementation of Reveal Web client.
         const revealView1 = new $.ig.RevealView("#reveal-view-1");
 
@@ -43,15 +41,8 @@
             revealView1.onSave = (rv, args) => {
                 if (args.saveAs) {
                     var newName = prompt("Please enter the dashboard name");
-                    isDuplicateName(newName).then(isDuplicate => {
-                        if (isDuplicate === "true") {
-                            if (!window.confirm("A dashboard with name: " + newName + " already exists. Do you want to override it?")) {
-                                return;
-                            }
-                        }
-                        args.dashboardId = args.name = newName;
-                        args.saveFinished();
-                    });
+                    args.dashboardId = args.name = newName;
+                    args.saveFinished();
                 }
                 else {
                     args.saveFinished();
@@ -60,7 +51,6 @@
         });
 
         function isDuplicateName(name) {
-            return fetch(`http://localhost:5112/isduplicatename/${name}`).then(resp => resp.text());
         }
 
     </script>
